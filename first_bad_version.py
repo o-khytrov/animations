@@ -19,7 +19,13 @@ class FirstBadVersion(Scene):
 
         array = ["?" for a in range(num)]
         table = Table([array], include_outer_lines=True).scale(0.7).to_edge(DOWN, buff=1)
+
         self.play(Create(table))
+        indices = VGroup()
+        for i, cell in enumerate(table.mob_table[0]):
+            index = Text(f"{i+1}", color=YELLOW, font_size=12).next_to(cell, DOWN, buff=0.3)
+            indices.add(index)
+        self.play(Write(indices))
         """
         for i, n in enumerate(array):
             table.add_highlighted_cell((1, i + 1), color=GREEN if n else RED)
@@ -54,16 +60,15 @@ class FirstBadVersion(Scene):
 
         left_pointer = Text(f"l = 0", color=BLUE).next_to(table.get_cell((1, 1)), UP)
         self.play(Write(left_pointer))
-        right_pointer = Text(f"r = {num}", color=RED).next_to(table.get_cell((1, num)), UP)
+        right_pointer = Text(f"r = {num}", color=RED).next_to(table.get_cell((1, num)), DOWN)
         self.play(Write(right_pointer))
 
         mid_text = Text(f"m = {m}", color=YELLOW).next_to(table.get_cell((1, m + 1)), UP)
         self.play(Write(mid_text))
 
-        mid_text = None
         while l < r:
             m = l + (r - l) // 2
-            # self.play(mid_text.animate.next_to(table.get_cell((1, m + 1)), UP))
+            self.play(mid_text.animate.next_to(table.get_cell((1, m + 1)), UP))
 
             table.add_highlighted_cell((1, m + 1), color=YELLOW)
             self.wait(0.1)
@@ -71,8 +76,10 @@ class FirstBadVersion(Scene):
                 next_cell = table.get_cell((1, m + 1))
                 for c in range(m, r):
                     table.add_highlighted_cell((1, c + 1), color=RED)
+
                     self.wait(0.1)
-                self.play(right_pointer.animate.next_to(next_cell, UP))
+                self.play(right_pointer.animate.next_to(next_cell, DOWN),
+                          Transform(right_pointer, Text(f"r = {m + 1}", color=RED).next_to(next_cell, DOWN)))
                 r = m
                 result = m
             else:
@@ -83,7 +90,14 @@ class FirstBadVersion(Scene):
                 l = m + 1
                 next_cell = table.get_cell((1, l + 1))
 
-                self.play(left_pointer.animate.next_to(next_cell, UP))
-            pass
+                self.play(left_pointer.animate.next_to(next_cell, UP),
+                          Transform(left_pointer, Text(f"l = {l + 1}", color=BLUE).next_to(next_cell, UP)))
+            self.wait()
 
         self.wait()
+
+
+if __name__ == "__main__":
+    with tempconfig({"quality": "low_quality"}):
+        scene = FirstBadVersion()
+        scene.render()
