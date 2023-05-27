@@ -1,7 +1,7 @@
 from manim import VGroup, WHITE, UP, Triangle, DEGREES, DOWN, Text, AnimationGroup, RED, Wiggle
 
 from custom.array import Array
-
+import numpy as np
 
 class ArrayPointer(VGroup):
 
