@@ -19,6 +19,8 @@ class IsSubsequence(Scene):
         i = 0
         s_index = 0
         counter = 0
+        counter_text = Text("counter = 0").next_to(s_array, UP, buff=2)
+        self.play(Write(counter_text))
         while i < len(t):
 
             self.play(t_pointer.move_to_index(i))
@@ -27,12 +29,14 @@ class IsSubsequence(Scene):
                 break
             if s[s_index] == t[i]:
                 self.add(t_array.highlight_element(i))
+                counter += 1
+                self.play(Transform(counter_text, (Text(f"counter = {counter}").next_to(s_array, UP, buff=2))))
 
                 s_index += 1
                 if s_index < len(s):
                     self.play(s_pointer.move_to_index(s_index))
-
-                counter += 1
+            else:
+                self.play(t_pointer.wiggle())
 
             i += 1
             self.wait()
