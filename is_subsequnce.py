@@ -5,6 +5,27 @@ from custom.array_pointer import ArrayPointer
 
 
 class IsSubsequence(Scene):
+    def intro(self):
+        t = "ahbgdc"
+        s = "abc"
+        s_array = Array([c for c in s])
+        t_array = Array([c for c in t]).next_to(s_array, DOWN)
+        self.add(s_array)
+        self.add(t_array)
+        self.wait()
+        self.add(s_array.highlight_element(0, highlight_color=YELLOW))
+        self.wait()
+        self.add(t_array.highlight_element(0))
+        self.wait()
+        self.add(s_array.highlight_element(1, highlight_color=YELLOW))
+        self.wait()
+        self.add(t_array.highlight_element(2))
+        self.wait()
+        self.add(s_array.highlight_element(2, highlight_color=YELLOW))
+        self.wait()
+        self.add(t_array.highlight_element(5))
+        self.wait()
+
     def construct(self):
         t = "ahbgdc"
         s = "abc"
