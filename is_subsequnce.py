@@ -12,6 +12,7 @@ class IsSubsequence(Scene):
         t_array = Array([c for c in t]).next_to(s_array, DOWN)
         self.add(s_array)
         self.add(t_array)
+        self.wait()
         s_pointer = ArrayPointer(s_array, "j", color=BLUE, direction=UP)
         t_pointer = ArrayPointer(t_array, "i", color=YELLOW, direction=DOWN)
         self.add(s_pointer)
