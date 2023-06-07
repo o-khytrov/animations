@@ -3,9 +3,9 @@ from manim import Table, VGroup, GREEN, BackgroundRectangle
 
 class Array(Table):
 
-    def __init__(self, array: []):
+    def __init__(self, array: [], **kwargs):
         self._array = array
-        super().__init__([array], include_outer_lines=True)
+        super().__init__([array], include_outer_lines=True, **kwargs)
         self.scale(0.8)
         self._highlighted_elements = VGroup()
 
