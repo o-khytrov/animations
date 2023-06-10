@@ -30,10 +30,28 @@ class Array(Table):
         el2 = self.mob_table[0][i2]
         loc1 = el1.get_center()
         loc2 = el2.get_center()
-        #el1.set_color(RED)
         self.mob_table[0][i1] = el2
         self.mob_table[0][i2] = el1
         return Succession(AnimationGroup(el1.animate.shift(UP * 2),
                                          el2.animate.shift(UP * 2)),
                           AnimationGroup(el1.animate.move_to(loc2),
                                          el2.animate.move_to(loc1)))
+
+    def get_subarray_elements(self, left, right):
+        group = VGroup()
+        for i in range(left, right + 1):
+            try:
+                group.add(self.mob_table[0][i])
+            except:
+                pass
+        return group
+
+    def get_subarray_surrounding_rectangle(self, start, end):
+        subarray = self.get_subarray_group(start, end)
+        return SurroundingRectangle(subarray)
+
+    def get_subarray_group(self, start, end):
+        subarray = VGroup()
+        for i in range(start, end):
+            subarray.add(self.get_element_by_index(i))
+        return subarray
