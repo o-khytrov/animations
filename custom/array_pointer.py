@@ -3,9 +3,10 @@ from manim import VGroup, WHITE, UP, Triangle, DEGREES, DOWN, Text, AnimationGro
 from custom.array import Array
 import numpy as np
 
+
 class ArrayPointer(VGroup):
 
-    def __init__(self, array: Array, name: str, color=WHITE, direction=UP, index=0):
+    def __init__(self, array: Array, name: str, color=WHITE, direction=UP, index=0, hide_name=False):
         super().__init__()
         self._array = array
         self._direction = direction

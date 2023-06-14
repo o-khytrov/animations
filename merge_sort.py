@@ -62,17 +62,25 @@ class MergeSort(Scene):
             i = j = k = 0
 
             arr_pointer = ArrayPointer(m_array, "k", color=YELLOW)
+            l_pointer = ArrayPointer(m_l, "i", direction=DOWN, color=YELLOW)
+            r_pointer = ArrayPointer(r_l, "j", direction=DOWN, color=YELLOW)
             self.add(arr_pointer)
+            self.add(l_pointer)
+            self.add(r_pointer)
             # Copy data to temp arrays L[] and R[]
             while i < len(L) and j < len(R):
                 if L[i] <= R[j]:
                     arr[k] = L[i]
+                    self.play(l_pointer.move_to_index(i))
                     self.copy(m_array, k, m_l, i)
                     i += 1
+
                 else:
                     arr[k] = R[j]
+                    self.play(r_pointer.move_to_index(j))
                     self.copy(m_array, k, r_l, j)
                     j += 1
+
                 k += 1
                 self.play(arr_pointer.move_to_index(k))
 
@@ -80,17 +88,21 @@ class MergeSort(Scene):
             while i < len(L):
                 arr[k] = L[i]
                 self.copy(m_array, k, m_l, i)
+                self.play(l_pointer.move_to_index(i), arr_pointer.move_to_index(k))
                 i += 1
                 k += 1
 
             while j < len(R):
                 arr[k] = R[j]
                 self.copy(m_array, k, r_l, j)
+                self.play(r_pointer.move_to_index(j), arr_pointer.move_to_index(k))
                 j += 1
                 k += 1
+            self.remove(arr_pointer._select_box, arr_pointer._arrow, arr_pointer._label)
+            self.remove(l_pointer._select_box, l_pointer._arrow, l_pointer._label)
+            self.remove(r_pointer._select_box, r_pointer._arrow, r_pointer._label)
             self.play(Uncreate(m_l))
             self.play(Uncreate(r_l))
-            self.remove(arr_pointer._select_box, arr_pointer._arrow, arr_pointer._label)
 
     def construct(self):
         # self.original_array = np.random.randint(1, 100, 7).tolist()
