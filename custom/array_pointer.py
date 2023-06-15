@@ -1,4 +1,5 @@
-from manim import VGroup, WHITE, UP, Triangle, DEGREES, DOWN, Text, AnimationGroup, RED, Wiggle, Succession
+from manim import VGroup, WHITE, UP, Triangle, DEGREES, DOWN, Text, AnimationGroup, RED, Wiggle, Succession, \
+    DEFAULT_MOBJECT_TO_MOBJECT_BUFFER
 
 from custom.array import Array
 import numpy as np
@@ -6,7 +7,8 @@ import numpy as np
 
 class ArrayPointer(VGroup):
 
-    def __init__(self, array: Array, name: str, color=WHITE, direction=UP, index=0, hide_name=False):
+    def __init__(self, array: Array, name: str, color=WHITE, direction=UP, index=0, hide_name=False,
+                 label_buff=DEFAULT_MOBJECT_TO_MOBJECT_BUFFER):
         super().__init__()
         self._array = array
         self._direction = direction
@@ -20,11 +22,11 @@ class ArrayPointer(VGroup):
             -self.get_arrow_rotation_degree() * DEGREES).next_to(self._target_element, self._direction, buff=0.15)
 
         self._label = self.get_label()
-        self._label.next_to(self._arrow, self._direction)
+        self._label.next_to(self._arrow, self._direction, buff=label_buff)
 
         def label_text_updater(label):
             label.become(self.get_label())
-            self._label.next_to(self._arrow, self._direction)
+            self._label.next_to(self._arrow, self._direction, buff=label_buff)
 
         self._label.add_updater(label_text_updater)
         self._pointer = VGroup(self._label, self._arrow)

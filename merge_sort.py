@@ -51,6 +51,7 @@ class MergeSort(Scene):
 
             m_l = Array(L).move_to(m_array, aligned_edge=LEFT)
             m_divisor = Line(m_l.get_edge_center(UR), m_l.get_edge_center(DR), color=RED)
+
             self.add(m_divisor)
 
             r_l = Array(R).move_to(m_array, aligned_edge=RIGHT)
@@ -65,9 +66,9 @@ class MergeSort(Scene):
 
             i = j = k = 0
 
-            arr_pointer = ArrayPointer(m_array, "k", color=YELLOW)
-            l_pointer = ArrayPointer(m_l, "i", direction=DOWN, color=TEAL)
-            r_pointer = ArrayPointer(r_l, "j", direction=DOWN, color=BLUE)
+            arr_pointer = ArrayPointer(m_array, "k", color=YELLOW, label_buff=0.08)
+            l_pointer = ArrayPointer(m_l, "l", direction=DOWN, color="#8957e5")
+            r_pointer = ArrayPointer(r_l, "r", direction=DOWN, color=BLUE)
             self.add(arr_pointer)
             self.add(l_pointer)
             self.add(r_pointer)
@@ -117,7 +118,7 @@ class MergeSort(Scene):
     def construct(self):
         # self.original_array = np.random.randint(1, 100, 7).tolist()
         self.original_array = [9, 8, 6, 7, 1, 4, 3, 2, 5]
-        self.m_original_array = Array(self.original_array).to_edge(UP)
+        self.m_original_array = Array(self.original_array).to_edge(UP, buff=0.35)
         self.add(self.m_original_array)
 
         self.merge_sort(self.original_array, self.m_original_array)
