@@ -1,4 +1,4 @@
-from manim import VGroup, WHITE, UP, Triangle, DEGREES, DOWN, Text, AnimationGroup, RED, Wiggle
+from manim import VGroup, WHITE, UP, Triangle, DEGREES, DOWN, Text, AnimationGroup, RED, Wiggle, Succession
 
 from custom.array import Array
 import numpy as np
@@ -53,4 +53,5 @@ class ArrayPointer(VGroup):
 
     def wiggle(self):
         self._select_box.set_color(RED)
-        return AnimationGroup(Wiggle(self._select_box))
+        return Succession(AnimationGroup(Wiggle(self._select_box)),
+                          AnimationGroup(self._select_box.animate.set_color(self._color)))

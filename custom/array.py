@@ -14,7 +14,8 @@ class Array(Table):
 
     def highlight_element(self, index: int, highlight_color=GREEN):
         element = self.get_element_by_index(index)
-        bg_cell = BackgroundRectangle(element, color=highlight_color)
+        bg_cell = BackgroundRectangle(element, color=highlight_color, fill_opacity=1)
+        bg_cell.z_index = -1
         self._highlighted_elements.add(bg_cell)
         return bg_cell
 
