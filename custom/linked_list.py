@@ -105,4 +105,4 @@ class LinkedList(Scene):
                 self.play(slow_pointer.animate.move_to(slow_position.next_node.val.get_center()), run_time=0.25)
                 slow_position = slow_position.next_node
 
-            self.wait()
+        self.wait()
