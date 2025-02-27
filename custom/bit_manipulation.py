@@ -1,5 +1,7 @@
 from manim import *
 
+config.background_color = ManimColor("#262626")
+
 
 class BitManipulation(Scene):
     def math_per_character(self, expression: str, **kwargs):
@@ -41,8 +43,6 @@ class BitManipulation(Scene):
         self.play(Write(a_txt), Write(sign_txt), Write(b_txt), Write(eq_txt))
         self.play(a_txt_copy.animate.become(bin_a_text))
         self.play(b_txt_copy.animate.become(bin_b_text))
-        # self.remove(a_txt_copy)
-        # self.remove(b_txt_copy)
         self.play(Create(underline))
         for i in reversed(range(len(res_bin_str))):
             indication_color = GREEN if res_bin_str[i] == '1' else RED
@@ -53,6 +53,8 @@ class BitManipulation(Scene):
 
             br = bin_res_txt[i]
             self.play(Indicate(ba, color=indication_color), Indicate(bb, color=indication_color))
+            ba.set_color(indication_color)
+            bb.set_color(indication_color)
             self.play(Write(br))
 
         self.play(bin_xor_txt_copy.animate.become(res_txt))

@@ -1,7 +1,8 @@
 from manim import *
 import numpy as np
 import random
-
+WHITE
+config.background_color = ManimColor("#262626")
 
 def generate_islands(shape, num_islands, max_size):
     matrix = np.zeros(shape, dtype=int)
@@ -37,7 +38,7 @@ class Matrix(Scene):
         def highlight(r, c):
             if (r, c) in visit:
                 return
-            color = BLUE if grid[r][c] == 0 else GREEN
+            color = ManimColor("#03045e") if grid[r][c] == 0 else ManimColor("#006400")
             matrix.add_highlighted_cell((r + 1, c + 1), color=color, fill_opacity=1)
             self.wait(0.1)
 
