@@ -8,8 +8,9 @@ class BitManipulation(Scene):
         math_chars = [char for char in expression]  # Split into characters
         return MathTex(*math_chars, **kwargs)
 
-    def bitwise_operation(self, a: int, b: int, operation, sign, start_point, title):
+    def bitwise_operation(self, a: int, b: int, operation, sign, start_point, title, code_sign):
 
+        code_str = f"{a} {code_sign} {b}"
         a_txt = MathTex(str(a))
         res = operation(a, b)
         sign_txt = MathTex(sign).next_to(a_txt, direction=RIGHT)
@@ -30,34 +31,42 @@ class BitManipulation(Scene):
 
         a_txt_copy = a_txt.copy()
         b_txt_copy = b_txt.copy()
-        title_txt = Text(title).next_to(expression_left_side, direction=UP)
-        expression_group = VGroup(title_txt, a_txt, sign_txt, b_txt, eq_txt, res_txt, bin_a_text, bin_b_text, bin_res_txt, a_txt_copy, b_txt_copy, bin_xor_txt_copy, underline)
+        code = Code(code_string=code_str, language="python", add_line_numbers=False).next_to(expression_left_side, direction=UP)
+        title_txt = Text(title).next_to(code, direction=UP)
+        expression_group = VGroup(title_txt, a_txt, sign_txt, b_txt, eq_txt, res_txt, bin_a_text, bin_b_text, bin_res_txt, a_txt_copy, b_txt_copy, bin_xor_txt_copy, underline, code)
         expression_group.move_to(start_point)
+
         self.play(Write(title_txt))
+        self.play(Create(code))
         self.play(Write(a_txt), Write(sign_txt), Write(b_txt), Write(eq_txt))
         self.play(a_txt_copy.animate.become(bin_a_text))
         self.play(b_txt_copy.animate.become(bin_b_text))
+        # self.remove(a_txt_copy)
+        # self.remove(b_txt_copy)
         self.play(Create(underline))
         for i in reversed(range(len(res_bin_str))):
             indication_color = GREEN if res_bin_str[i] == '1' else RED
+            self.remove(b_txt_copy[i])
+            self.remove(a_txt_copy[i])
             ba = bin_a_text[i]
             bb = bin_b_text[i]
 
             br = bin_res_txt[i]
-            self.play(Indicate(ba, color=indication_color), Indicate(bb, color=indication_color), Write(br))
+            self.play(Indicate(ba, color=indication_color), Indicate(bb, color=indication_color))
+            self.play(Write(br))
 
         self.play(bin_xor_txt_copy.animate.become(res_txt))
 
         self.play(FadeOut(expression_group))
 
     def bitwise_xor(self, a, b, start_point):
-        self.bitwise_operation(a, b, lambda x, y: x ^ y, "\oplus", start_point, "XOR")
+        self.bitwise_operation(a, b, lambda x, y: x ^ y, "\oplus", start_point, "XOR", "^")
 
     def bitwise_and(self, a, b, start_point):
-        self.bitwise_operation(a, b, lambda x, y: x & y, "\land", start_point, "AND")
+        self.bitwise_operation(a, b, lambda x, y: x & y, "\land", start_point, "AND", "&")
 
     def bitwise_or(self, a, b, start_point):
-        self.bitwise_operation(a, b, lambda x, y: x | y, "\lor", start_point, "OR")
+        self.bitwise_operation(a, b, lambda x, y: x | y, "\lor", start_point, "OR", "|")
 
     def decimal_to_binary_conversion(self):
         previous = None
