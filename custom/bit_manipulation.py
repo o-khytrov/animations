@@ -1,6 +1,4 @@
-from manim import *
-
-config.background_color = ManimColor("#262626")
+from setup import *
 
 
 class BitManipulation(Scene):

@@ -1,8 +1,7 @@
-from manim import *
+from setup import *
+
 import numpy as np
 import random
-WHITE
-config.background_color = ManimColor("#262626")
 
 def generate_islands(shape, num_islands, max_size):
     matrix = np.zeros(shape, dtype=int)
