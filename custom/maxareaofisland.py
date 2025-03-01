@@ -62,7 +62,7 @@ class MaxAreaOfIsland(Scene):
                 area = self.dfs(r, c)
                 if area > self.max_area:
                     self.max_area = area
-                    self.on_screen_max_area.tracker.set_value(self.max_area)
+                    self.play(self.on_screen_max_area.animate.become(Text(f"max_area = {self.max_area}").next_to(self.matrix, UP)), run_time=0.4)
                 return
             else:
                 self.highlight(r, c)
@@ -70,7 +70,7 @@ class MaxAreaOfIsland(Scene):
 
     def find_max_area_of_island(self):
         self.max_area = 0
-        self.on_screen_max_area = Variable(self.max_area, Text("max_area"), num_decimal_places=0).next_to(self.matrix, direction=UP)
+        self.on_screen_max_area = Text("max_area = 0").next_to(self.matrix, UP)
         self.add(self.on_screen_max_area)
         self.pointer = self.matrix.get_cell((1, 1), color=Red)
 
@@ -115,7 +115,7 @@ class MaxAreaOfIsland(Scene):
         neighbours = [(r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)]
         res = 1
         for nr, nc in neighbours:
-            res + self.dfs(nr, nc)
+            res+=self.dfs(nr, nc)
             self.play(self.pointer.animate.move_to(next_cell), run_time=0.4)
             while len(self.path) > path_len:
                 self.remove(self.path.pop(-1))
