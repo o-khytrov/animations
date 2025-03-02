@@ -1,13 +1,11 @@
 from collections import defaultdict
 
+from networkx.classes import neighbors
+
 from setup import *
 
 
 class MaxAreaOfIsland(Scene):
-
-    def construct(self):
-        self.init()
-        self.find_max_area_of_island()
 
     def show_directions(self, mobject, r, c):
 
@@ -62,7 +60,8 @@ class MaxAreaOfIsland(Scene):
                 area = self.dfs(r, c)
                 if area > self.max_area:
                     self.max_area = area
-                    self.play(self.on_screen_max_area.animate.become(Text(f"max_area = {self.max_area}").next_to(self.matrix, UP)), run_time=0.4)
+                    self.play(self.on_screen_max_area.animate.become(
+                        Text(f"max_area = {self.max_area}").next_to(self.matrix, UP)), run_time=0.4)
                 return
             else:
                 self.highlight(r, c)
@@ -85,7 +84,7 @@ class MaxAreaOfIsland(Scene):
     def highlight(self, r, c):
         if (r, c) in self.visit:
             return
-        color = ManimColor("#03045e") if self.grid[r][c] == 0 else ManimColor("#006400")
+        color = Blue if self.grid[r][c] == 0 else Green
         self.matrix.add_highlighted_cell((r + 1, c + 1), color=color, fill_opacity=1)
         self.wait(0.1)
 
@@ -115,7 +114,7 @@ class MaxAreaOfIsland(Scene):
         neighbours = [(r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)]
         res = 1
         for nr, nc in neighbours:
-            res+=self.dfs(nr, nc)
+            res += self.dfs(nr, nc)
             self.play(self.pointer.animate.move_to(next_cell), run_time=0.4)
             while len(self.path) > path_len:
                 self.remove(self.path.pop(-1))
@@ -127,6 +126,41 @@ class MaxAreaOfIsland(Scene):
             self.play(Uncreate(arrow), run_time=0.4)
             self.remove(arrow)
         self.arrows[(r, c)].clear()
+
+    def highlight_islands(self):
+        ROWS = len(self.grid)
+        COLS = len(self.grid[0])
+        visit = set()
+
+        def dfs(r, c, land):
+            if r < 0 or r == ROWS or c < 0 or c == COLS or self.grid[r][c] == 0:
+                return
+            if (r, c) in visit:
+                return
+
+            land.append(self.matrix.get_cell((r + 1, c + 1)))
+            visit.add((r, c))
+            neighbours = [(r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)]
+            for nr, nc in neighbours:
+                dfs(nr, nc, land)
+
+
+        for r in range(ROWS):
+            for c in range(COLS):
+                if self.grid[r][c] == 1:
+                    land = []
+                    dfs(r, c, land)
+
+                    self.matrix.add_highlighted_cell((r + 1, c + 1), color=Green, fill_opacity=1)
+
+                else:
+                    self.matrix.add_highlighted_cell((r + 1, c + 1), color=Blue, fill_opacity=1)
+
+    def construct(self):
+        self.init()
+        # self.find_max_area_of_island()
+        self.highlight_islands()
+        self.wait()
 
 
 if __name__ == "__main__":
