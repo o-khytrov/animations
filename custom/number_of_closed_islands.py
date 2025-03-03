@@ -39,12 +39,12 @@ class MaxAreaOfIsland(Scene):
         self.play(Create(directions), run_time=0.4)
 
     def init(self):
-        self.grid = [[1, 1, 1, 1, 1, 1, 1, 0], [1, 0, 0, 0, 0, 1, 1, 0], [1, 0, 1, 0, 1, 1, 1, 0],
-                     [1, 0, 0, 0, 0, 1, 0, 1], [1, 1, 1, 1, 1, 1, 1, 0]]
-        # self.grid = [[0, 0, 1, 1, 0, 1, 0, 0, 1, 0], [1, 1, 0, 1, 1, 0, 1, 1, 1, 0], [1, 0, 1, 1, 1, 0, 0, 1, 1, 0],
-        #              [0, 1, 1, 0, 0, 0, 0, 1, 0, 1], [0, 0, 0, 0, 0, 0, 1, 1, 1, 0], [0, 1, 0, 1, 0, 1, 0, 1, 1, 1],
-        #              [1, 0, 1, 0, 1, 1, 0, 0, 0, 1], [1, 1, 1, 1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 1, 0, 1, 0, 1],
-        #              [1, 1, 1, 0, 1, 1, 0, 1, 1, 0]]
+        # self.grid = [[1, 1, 1, 1, 1, 1, 1, 0], [1, 0, 0, 0, 0, 1, 1, 0], [1, 0, 1, 0, 1, 1, 1, 0],
+        #              [1, 0, 0, 0, 0, 1, 0, 1], [1, 1, 1, 1, 1, 1, 1, 0]]
+        self.grid = [[0, 0, 1, 1, 0, 1, 0, 0, 1, 0], [1, 1, 0, 1, 1, 0, 1, 1, 1, 0], [1, 0, 1, 1, 1, 0, 0, 1, 1, 0],
+                     [0, 1, 1, 0, 0, 0, 0, 1, 0, 1], [0, 0, 0, 0, 0, 0, 1, 1, 1, 0], [0, 1, 0, 1, 0, 1, 0, 1, 1, 1],
+                     [1, 0, 1, 0, 1, 1, 0, 0, 0, 1], [1, 1, 1, 1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 0, 1, 0, 1, 0, 1],
+                     [1, 1, 1, 0, 1, 1, 0, 1, 1, 0]]
         self.matrix = IntegerTable(
             np.array(self.grid),
             include_outer_lines=True
@@ -182,14 +182,14 @@ class MaxAreaOfIsland(Scene):
                 if self.grid[r][c] == 0:
                     land = []
                     dfs(r, c, land)
-                    self.matrix.add_highlighted_cell((r + 1, c + 1), color=Blue, fill_opacity=1)
-                else:
                     self.matrix.add_highlighted_cell((r + 1, c + 1), color=Green, fill_opacity=1)
+                else:
+                    self.matrix.add_highlighted_cell((r + 1, c + 1), color=Blue, fill_opacity=1)
 
     def construct(self):
         self.init()
-        # self.count_closed_islands()
-        self.highlight_islands()
+        self.count_closed_islands()
+        # self.highlight_islands()
         self.wait()
         self.play(Create(VGroup(self.borders)))
         # self.remove(self.pointer)
