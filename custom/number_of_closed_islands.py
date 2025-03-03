@@ -95,7 +95,7 @@ class MaxAreaOfIsland(Scene):
         self.matrix.add_highlighted_cell((r + 1, c + 1), color=color, fill_opacity=1)
         self.wait(0.1)
 
-    def draw_border(self, r, c, parent):
+    def draw_border(self, r, c, parent, show_on_scene=True):
         pr, pc = parent
         parent_cell = self.matrix.get_cell((pr + 1, pc + 1))
         top_left, top_right, bottom_right, bottom_left = parent_cell.get_vertices()
@@ -109,7 +109,8 @@ class MaxAreaOfIsland(Scene):
         elif r < pr:  # up
             border = Line(top_left, top_right, color=Red, stroke_width=6)
         if border:
-            self.add(border)
+            if show_on_scene:
+                self.add(border)
             self.borders.append(border)
 
     def dfs(self, r, c, parent=None):
@@ -161,21 +162,24 @@ class MaxAreaOfIsland(Scene):
         COLS = len(self.grid[0])
         visit = set()
 
-        def dfs(r, c, land):
-            if r < 0 or r == ROWS or c < 0 or c == COLS or self.grid[r][c] == 0:
+        def dfs(r, c, land, parent=None):
+            if r < 0 or r == ROWS or c < 0 or c == COLS:
+                return
+
+            if self.grid[r][c] == 1:
+                self.draw_border(r, c, parent, show_on_scene=False)
                 return
             if (r, c) in visit:
                 return
-
             land.append(self.matrix.get_cell((r + 1, c + 1)))
             visit.add((r, c))
             neighbours = [(r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)]
             for nr, nc in neighbours:
-                dfs(nr, nc, land)
+                dfs(nr, nc, land, (r, c))
 
         for r in range(ROWS):
             for c in range(COLS):
-                if self.grid[r][c] == 1:
+                if self.grid[r][c] == 0:
                     land = []
                     dfs(r, c, land)
                     self.matrix.add_highlighted_cell((r + 1, c + 1), color=Blue, fill_opacity=1)
@@ -184,9 +188,11 @@ class MaxAreaOfIsland(Scene):
 
     def construct(self):
         self.init()
-        self.count_closed_islands()
-        # self.highlight_islands()
-        self.remove(self.pointer)
+        # self.count_closed_islands()
+        self.highlight_islands()
+        self.wait()
+        self.play(Create(VGroup(self.borders)))
+        # self.remove(self.pointer)
         self.wait()
 
 
