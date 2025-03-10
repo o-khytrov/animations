@@ -4,6 +4,11 @@ from setup import *
 
 path_color = Purple
 
+config.pixel_height = 1920
+config.pixel_width = 1080
+config.frame_height = 16.0
+config.frame_width = 9.0
+
 
 class TrieNode:
     def __init__(self, label=None):
@@ -46,7 +51,8 @@ class Trie(Scene):
             cur = child
         self.remove(pointer)
         self.remove(letter_pointer)
-        self.play(Indicate(VGroup(path), color=None))
+        if cur.is_word:
+            self.play(Indicate(VGroup(path), color=None))
         self.reset_graph_state()
 
     def add_word(self, word):
@@ -94,6 +100,7 @@ class Trie(Scene):
             pointer.add_updater(lambda r: r.move_to(self.graph[child.id].get_center()))
 
             cur = child
+        cur.is_word = True
         self.remove(pointer)
         self.remove(word_text)
         self.remove(letter_pointer)
@@ -102,8 +109,13 @@ class Trie(Scene):
     def reset_graph_state(self):
         for edge in self.graph.edges:
             self.graph.edges[edge].set_color(WHITE)
-        for vertex in self.graph.vertices:
-            self.graph[vertex][0].set_color(Green)
+
+        def reset_colors_dfs(node: TrieNode):
+            self.graph[node.id][0].set_color(Red if node.is_word else Green)
+            for child in node.children.values():
+                reset_colors_dfs(child)
+
+        reset_colors_dfs(self.root)
 
     def construct(self):
         self.root = TrieNode('.')
@@ -114,6 +126,7 @@ class Trie(Scene):
         self.add_word("banana")
         self.add_word("box")
         self.add_word("body")
+        self.add_word("application")
         self.add_word("band")
 
         self.search_word("band")
