@@ -52,7 +52,7 @@ class Trie(Scene):
         self.remove(pointer)
         self.remove(letter_pointer)
         if cur.is_word:
-            self.play(Indicate(VGroup(path), color=None))
+            self.play(Indicate(VGroup(path), color=None), Indicate(word_text, color=path_color))
         self.reset_graph_state()
 
     def add_word(self, word):
@@ -66,10 +66,11 @@ class Trie(Scene):
         self.play(Create(pointer), Create(letter_pointer))
         for i, c in enumerate(word):
             self.play(letter_pointer.animate.move_to(word_text[i].get_center()))
-            letter_copy = word_text[i].copy()
-            self.play(letter_copy.animate.move_to(self.graph[cur.id].get_center()))
-            self.remove(letter_copy)
+
             if c not in cur.children:
+                letter_copy = word_text[i].copy()
+                self.play(letter_copy.animate.move_to(self.graph[cur.id].get_center()))
+                self.remove(letter_copy)
                 child = TrieNode(c)
                 cur.children[c] = child
                 self.graph._labels.update({child.id: child.label})
@@ -85,7 +86,6 @@ class Trie(Scene):
                 self.graph.add_edges((cur.id, child.id))
                 self.graph.edges[(cur.id, child.id)].set_color(path_color)
                 self.graph.vertices[cur.id][0].set_color(path_color)
-
                 self.play(self.graph.animate.change_layout('tree', root_vertex=self.root.id,
                                                            layout_config={"vertex_spacing": (1, 1)}))
 
@@ -93,10 +93,11 @@ class Trie(Scene):
             else:
                 child = cur.children[c]
             pointer.clear_updaters()
-            self.graph.edges[(cur.id, child.id)].set_color(path_color)
-            self.graph.vertices[cur.id][0].set_color(path_color)
+
             self.play(pointer.animate.move_to(self.graph[child.id].get_center()),
-                      letter_pointer.animate.move_to(word_text[i].get_center()))
+                      letter_pointer.animate.move_to(word_text[i].get_center()),
+                      self.graph.edges[(cur.id, child.id)].animate.set_color(path_color),
+                      self.graph.vertices[cur.id][0].animate.set_color(path_color))
             pointer.add_updater(lambda r: r.move_to(self.graph[child.id].get_center()))
 
             cur = child
